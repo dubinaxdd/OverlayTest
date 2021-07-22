@@ -31,12 +31,27 @@ MainWindow::MainWindow(QWidget *parent)
             ShowWindow(hWnd, SW_RESTORE);
         }*/
 
+
+
+
+   /* if (hWnd) {
+        SetForegroundWindow(hWnd);
+        SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 1920, 1080, SWP_SHOWWINDOW | WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_EX_TOPMOST );
+        ShowWindow(hWnd, SW_RESTORE);
+    }*/
+
+    showFullScreen();
+
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QString s = codec->toUnicode(this->windowTitle().toLatin1());
+    LPCWSTR lps = (LPCWSTR)s.utf16();
+
+    hWnd = FindWindowW(NULL, lps);
+
     tmr->setInterval(700);
     connect(tmr, &QTimer::timeout, this, &MainWindow::timeout, Qt::QueuedConnection);
 
     tmr->start();
-
-    showFullScreen();
 
 }
 
@@ -54,7 +69,14 @@ void MainWindow::timeout()
     //Соответственно затираем флаг и выставлем заного по таймеру.
     //Время устанавливаемое таймеру возможно придется менять из за разницы систем, надо тестить
 
-     setWindowFlag( Qt::WindowStaysOnTopHint, false);
+    /* setWindowFlag( Qt::WindowStaysOnTopHint, false);
      setWindowFlag( Qt::WindowStaysOnTopHint, true);
-     showFullScreen();
+     showFullScreen();*/
+
+    if (hWnd){
+        qDebug() << "yep";
+        BringWindowToTop(hWnd);
+    }
+
+    showFullScreen();
 }
