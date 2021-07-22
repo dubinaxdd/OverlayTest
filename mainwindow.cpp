@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     showFullScreen();
 
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-    QString s = codec->toUnicode(this->windowTitle().toLatin1());
+    QString s = codec->toUnicode("MAinWindow"/*this->windowTitle().toLatin1()*/);
     LPCWSTR lps = (LPCWSTR)s.utf16();
 
     hWnd = FindWindowW(NULL, lps);
@@ -105,7 +105,7 @@ void MainWindow::timeout()
 
 void MainWindow::on_pushButton_clicked()
 {
-    checkSoulstorm();
+    //checkSoulstorm();
     //SetWindowLong(soulstorm, GWL_STYLE,/* SWP_SHOWWINDOW |*/ WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_EX_TOPMOST/* | WS_DISABLED | WS_EX_NOACTIVATE | WS_MAXIMIZE*/);
     //SetWindowPos(soulstorm, HWND_TOPMOST, 0, 0, 0, 0,/* SWP_SHOWWINDOW |*/ WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_EX_TOPMOST/* | WS_DISABLED | WS_EX_NOACTIVATE *//*| WS_MAXIMIZE*/);
     if(soulstorm)
@@ -123,7 +123,7 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    checkSoulstorm();
+   // checkSoulstorm();
 
     //tmr->stop();
     //showNormal();
@@ -148,14 +148,14 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::checkSoulstorm()
 {
-    if (!soulstorm)
-    {
+   // if (!soulstorm)
+  //  {
         QTextCodec *codecc = QTextCodec::codecForName("UTF-8");
         QString ss = codecc->toUnicode("Dawn of War: Soulstorm");
         LPCWSTR lpss = (LPCWSTR)ss.utf16();
 
         soulstorm = FindWindowW(NULL, lpss);
-    }
+   // }
 
     if (soulstorm)
          soulstormSettings = GetWindowLong(soulstorm, GWL_STYLE);
