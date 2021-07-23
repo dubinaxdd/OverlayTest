@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTimer>
 #include "Windows.h"
+#include <QKeyEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,8 +23,6 @@ private slots:
 
    void on_pushButton_clicked();
 
-   void on_pushButton_2_clicked();
-
 private:
     Ui::MainWindow *ui;
 
@@ -33,7 +32,12 @@ private:
     HWND soulstorm;
     LONG soulstormSettings;
 
+    bool showFullOverlay = false;
+
     void checkSoulstorm();
+
+    void keyPressEvent(QKeyEvent *event) override;
+    void showOverlay();
 
 
 

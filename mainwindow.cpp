@@ -4,19 +4,22 @@
 #include<QTextCodec>
 
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow())
 {
     ui->setupUi(this);
 
     tmr = new QTimer();
 
-    setWindowFlags( windowFlags() | Qt::Window | Qt::FramelessWindowHint  | /*Qt::Tool | Qt::WindowTransparentForInput |*/ Qt::WindowStaysOnTopHint  );
+    setWindowFlags( windowFlags() | Qt::Window | Qt::FramelessWindowHint  | Qt::Tool | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint  );
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_MSWindowsUseDirect3D);
     setAttribute(Qt::WA_ShowWithoutActivating);
+
+
+
+
 
     /*
         QTextCodec *codec = QTextCodec::codecForName("UTF-8");
@@ -48,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     hWnd = FindWindowW(NULL, lps);
 
-    checkSoulstorm();
+  //  checkSoulstorm();
 
    /* if (soulstorm) {
 
@@ -105,58 +108,46 @@ void MainWindow::timeout()
 
 void MainWindow::on_pushButton_clicked()
 {
-    //checkSoulstorm();
-    //SetWindowLong(soulstorm, GWL_STYLE,/* SWP_SHOWWINDOW |*/ WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_EX_TOPMOST/* | WS_DISABLED | WS_EX_NOACTIVATE | WS_MAXIMIZE*/);
-    //SetWindowPos(soulstorm, HWND_TOPMOST, 0, 0, 0, 0,/* SWP_SHOWWINDOW |*/ WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_EX_TOPMOST/* | WS_DISABLED | WS_EX_NOACTIVATE *//*| WS_MAXIMIZE*/);
-    if(soulstorm)
-        ShowWindow(soulstorm, SW_RESTORE);
-
-   // timeout();
-    showFullScreen();
-    this->ui->groupBox_2->setVisible(true);
-    this->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
-    //SwitchToThisWindow(hWnd, true);
-    //BringWindowToTop(soulstorm);
-
-}
-
-
-void MainWindow::on_pushButton_2_clicked()
-{
-   // checkSoulstorm();
-
-    //tmr->stop();
-    //showNormal();
-    this->ui->groupBox_2->setVisible(false);
-    //SetWindowLong(soulstorm, GWL_STYLE, soulstormSettings);
-    //ShowWindow(soulstorm, SW_SHOWDEFAULT);
-
-    //SetActiveWindow(soulstorm);
-    //UpdateWindow(soulstorm);
-    //timeout();
-   // BringWindowToTop(soulstorm);
-    //restoreTimer->start();
-
-
-    this->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
-
-    if(soulstorm)
-        SwitchToThisWindow(soulstorm, true);
-
-    timeout();
+    showOverlay();
 }
 
 void MainWindow::checkSoulstorm()
 {
-   // if (!soulstorm)
-  //  {
-        QTextCodec *codecc = QTextCodec::codecForName("UTF-8");
-        QString ss = codecc->toUnicode("Dawn of War: Soulstorm");
-        LPCWSTR lpss = (LPCWSTR)ss.utf16();
 
-        soulstorm = FindWindowW(NULL, lpss);
-   // }
+    QTextCodec *codecc = QTextCodec::codecForName("UTF-8");
+    QString ss = codecc->toUnicode("Dawn of War: Soulstorm");
+    LPCWSTR lpss = (LPCWSTR)ss.utf16();
+
+    soulstorm = FindWindowW(NULL, lpss);
 
     if (soulstorm)
          soulstormSettings = GetWindowLong(soulstorm, GWL_STYLE);
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+
+    if(event->key() == 192)
+    {
+        showOverlay();
+    }
+
+    QMainWindow::keyPressEvent(event);
+}
+
+void MainWindow::showOverlay()
+{
+    if(showFullOverlay)
+    {
+        showFullOverlay = false;
+        this->ui->groupBox_2->setVisible(false);
+        this->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+    }
+    else
+    {
+        showFullOverlay = true;
+        this->ui->groupBox_2->setVisible(true);
+        this->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
+    }
+
 }
