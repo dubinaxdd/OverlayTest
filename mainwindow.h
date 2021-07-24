@@ -37,6 +37,7 @@ private:
     void checkSoulstorm();
 
     void keyPressEvent(QKeyEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
     void showOverlay();
 
 

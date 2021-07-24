@@ -4,7 +4,9 @@
 #include<QTextCodec>
 #include "Windows.h"
 #include <QDebug>
+#include <QEvent>
 #include <QKeyEvent>
+#include <QMouseEvent>
 
 HHOOK mouseHook = NULL;
 HHOOK keyboardHook = NULL;
@@ -20,25 +22,35 @@ void UpdateKeySate(BYTE *keystate, int keycode)
 
 
 LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
+
+    MSLLHOOKSTRUCT mKey = *((MSLLHOOKSTRUCT*)lParam);
+
+
+
+
+
+   // mKey..mouseData
+
     switch( wParam )
     {
         case WM_LBUTTONDOWN:
         {
-            //qDebug() << "Left click"; // Left click
-            //Ui::MainWindow* asd = w.getUi();
-            //groupBox_2->setVisible(true);
+            QMouseEvent *event = new QMouseEvent(QEvent::Type::MouseButtonPress, QPointF(mKey.pt.x, mKey.pt.y),Qt::MouseButton::LeftButton,Qt::MouseButtons(), Qt::KeyboardModifiers() );
+            QApplication::postEvent(w, event);
             break;
         }
 
         case WM_RBUTTONDOWN:
         {
-           // qDebug() << "Right click"; // Left click
+            QMouseEvent *event = new QMouseEvent(QEvent::Type::MouseButtonPress, QPointF(mKey.pt.x, mKey.pt.y),Qt::MouseButton::RightButton,Qt::MouseButtons(), Qt::KeyboardModifiers() );
+            QApplication::postEvent(w, event);
             break;
 
         }
 
         case WM_MOUSEMOVE:{
-            //qDebug() << "mouse move";
+            QMouseEvent *event = new QMouseEvent(QEvent::Type::MouseMove, QPointF(mKey.pt.x, mKey.pt.y), Qt::MouseButton(),Qt::MouseButtons(), Qt::KeyboardModifiers() );
+            QApplication::postEvent(w, event);
             break;
 
         }

@@ -135,6 +135,28 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     QMainWindow::keyPressEvent(event);
 }
 
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+
+    if (event->type() == QEvent::Type::MouseButtonPress)
+    {
+        if (event->button() == Qt::MouseButton::LeftButton)
+        {
+            if(event->pos().x() >= this->ui->pushButton->x()
+            && event->pos().x() <= this->ui->pushButton->x() + this->ui->pushButton->width()
+            && event->pos().y() >= this->ui->pushButton->y()
+            && event->pos().y() <= this->ui->pushButton->y() + this->ui->pushButton->height())
+            {
+                this->ui->pushButton->click();
+            }
+        }
+
+    }
+    qDebug() << "baneblade";
+
+    QMainWindow::mousePressEvent(event);
+}
+
 void MainWindow::showOverlay()
 {
     if(showFullOverlay)

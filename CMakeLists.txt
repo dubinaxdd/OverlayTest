@@ -45,7 +45,7 @@ else()
             ${PROJECT_SOURCES}
         )
     else()
-        add_executable(OverlayTest
+        add_executable(OverlayTest WIN32
             ${PROJECT_SOURCES}
         )
     endif()
