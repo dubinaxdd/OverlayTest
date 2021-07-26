@@ -164,7 +164,7 @@ void MainWindow::showOverlay()
 {
     if(showFullOverlay)
     {
-        EnableWindow(soulstorm, true);
+        EnableWindow(soulstorm, TRUE);
         //BlockInput(false);
         showFullOverlay = false;
         this->ui->groupBox_2->setVisible(false);
@@ -173,7 +173,7 @@ void MainWindow::showOverlay()
     else
     {
        // BlockInput(true);
-        EnableWindow(soulstorm, false);
+        EnableWindow(soulstorm, FALSE);
         showFullOverlay = true;
         this->ui->groupBox_2->setVisible(true);
         this->setStyleSheet("background-color: rgba(255, 255, 255, 100);");

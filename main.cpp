@@ -98,7 +98,10 @@ LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
     //qDebug()<<"key: " << cKey.vkCode << " " << QString::fromUtf16((ushort*)buffer) << " " << QString::fromUtf16((ushort*)lpszName);
 
-    return CallNextHookEx(keyboardHook, nCode, wParam, lParam);
+    //Вот так блокировать клавиатуру, правда переменную надо вытащить в глобальную облатсь
+    BOOL block = FALSE;
+
+    return block ? 1 : CallNextHookEx(keyboardHook, nCode, wParam, lParam);
 }
 
 int main(int argc, char *argv[])
