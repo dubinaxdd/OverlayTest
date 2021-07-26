@@ -20,6 +20,7 @@ public:
 
 private slots:
    void timeout();
+   void blockTimout();
 
    void on_pushButton_clicked();
 
@@ -27,6 +28,8 @@ private:
     Ui::MainWindow *ui;
 
     QTimer* tmr;
+
+    QTimer* blockTmr;
 
     HWND hWnd;
     HWND soulstorm;

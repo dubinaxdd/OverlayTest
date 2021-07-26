@@ -19,22 +19,19 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+    QTextCodec *codecc = QTextCodec::codecForName("UTF-8");
+    QString ssc = codecc->toUnicode("Dawn of War: Soulstorm");
+    LPCWSTR lpss = (LPCWSTR)ssc.utf16();
+
+    soulstorm = FindWindowW(NULL, lpss);
 
 
-    /*
-        QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-        QString s = codec->toUnicode("Dawn of War: Soulstorm");
-        LPCWSTR lps = (LPCWSTR)s.utf16();
 
-        hWnd = FindWindowW(NULL, lps);
-
-        if (hWnd) {
-            SetForegroundWindow(hWnd);
-            SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 1920, 1080, SWP_SHOWWINDOW | WS_POPUP | WS_VISIBLE );
-            ShowWindow(hWnd, SW_RESTORE);
-        }*/
-
-
+    if (soulstorm) {
+        SetForegroundWindow(soulstorm);
+        SetWindowPos(soulstorm, HWND_TOPMOST, 0, 0, 0, 0, WS_EX_TRANSPARENT | WS_VISIBLE );
+        //ShowWindow(hWnd, SW_RESTORE);
+    }
 
 
    /* if (hWnd) {
@@ -42,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
         SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 1920, 1080, SWP_SHOWWINDOW | WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_EX_TOPMOST );
         ShowWindow(hWnd, SW_RESTORE);
     }*/
+
+
     this->ui->groupBox_2->setVisible(false);
     showFullScreen();
 
@@ -51,30 +50,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     hWnd = FindWindowW(NULL, lps);
 
-  //  checkSoulstorm();
 
-   /* if (soulstorm) {
+    checkSoulstorm();
+
+  /*  if (soulstorm) {
 
             qDebug() << "yep";
             SetForegroundWindow(soulstorm);
             SetWindowPos(soulstorm, HWND_TOPMOST, 0, 0, 1920, 1080, SWP_SHOWWINDOW | WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_EX_TOPMOST | WS_DISABLED | WS_EX_NOACTIVATE | WS_MAXIMIZE);
             ShowWindow(soulstorm, SW_RESTORE);
-    }
-*/
+    }*/
 
-  /*  HOOKPROC hkprcSysMsg;
-    static HINSTANCE hinstDLL;
-    static HHOOK hhookSysMsg;
 
-    hinstDLL = LoadLibrary(TEXT("c:\\myapp\\sysmsg.dll"));
-    hkprcSysMsg = (HOOKPROC)GetProcAddress(hinstDLL, "SysMessageProc");
 
-    hhookSysMsg = SetWindowsHookEx(
-                        WH_SYSMSGFILTER,
-                        hkprcSysMsg,
-                        hinstDLL,
-                        0);
-    */
+    blockTmr = new QTimer();
+    blockTmr->setInterval(10000);
+    connect(blockTmr, &QTimer::timeout, this, &MainWindow::blockTimout, Qt::QueuedConnection);
+    blockTmr->start();
 
 
     tmr->setInterval(100);
@@ -100,10 +92,21 @@ void MainWindow::timeout()
     if (hWnd){
         BringWindowToTop(hWnd);
     }
+
+
     //не удалять
    // showFullScreen();
 
 
+}
+
+void MainWindow::blockTimout()
+{
+    //SetWindowPos(soulstorm, HWND_TOPMOST, 0, 0, 0, 0, GetWindowLong(soulstorm, GWL_EXSTYLE) | WS_EX_TRANSPARENT | WS_VISIBLE | WS_EX_NOACTIVATE  );
+    //SetWindowLongW(soulstorm, GWL_EXSTYLE, GetWindowLong(soulstorm, GWL_EXSTYLE) | /*WS_EX_TRANSPARENT |*/ WS_EX_NOACTIVATE);
+    //ShowWindow(soulstorm, SW_RESTORE);
+
+  //  BlockInput(false);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -161,12 +164,16 @@ void MainWindow::showOverlay()
 {
     if(showFullOverlay)
     {
+        EnableWindow(soulstorm, true);
+        //BlockInput(false);
         showFullOverlay = false;
         this->ui->groupBox_2->setVisible(false);
         this->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
     }
     else
     {
+       // BlockInput(true);
+        EnableWindow(soulstorm, false);
         showFullOverlay = true;
         this->ui->groupBox_2->setVisible(true);
         this->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
